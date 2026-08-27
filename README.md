@@ -6,11 +6,13 @@ stream can render plots from step outputs (TRACE XTV extracts, TraceForce
 interface — the same way the AptPlot Batch step runs AptPlot batch scripts
 today.
 
-**Status: v0.1.0 implemented.** The plugin compiles against a SNAP 5.0.0
-install, loads in the Model Editor ("Loading plugin: GRAVEPlot version 0.1.0"),
-and registers the step type, file types, and the `graveplot` application
-definition. End-to-end stream execution requires GRAVEPlot installed on the
-calculation-server host (see Distribution in `docs/DESIGN.md`).
+**Status: v0.1.0 implemented and verified end-to-end** (2026-08-27, macOS):
+the plugin compiles against a SNAP 5.0.0 install, loads in the Model Editor,
+registers the step type, file types, and `graveplot` application definition,
+and a stream carrying a GRAVEPlot step executed on a local calculation
+server, rendering its declared PNG into the step directory. Use on RESGC
+hosts still requires GRAVEPlot installed there (see Distribution in
+`docs/DESIGN.md`).
 
 | Path | Contents |
 |---|---|

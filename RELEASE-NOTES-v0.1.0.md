@@ -33,9 +33,24 @@ Initial implementation of the GRAVEPlot job-stream step for SNAP 5.0.0.
   XML export/parse (including XML-hostile script text), BeanInfo properties,
   step initialization, and output rebuilding covered by a standalone smoke
   test against the SNAP jars.
+- **End-to-end stream execution (2026-08-27)**: a single-step stream carrying
+  a self-contained sine-wave batch script ran on a local calculation server
+  (macOS, GRAVEPlot at `~/GRAVEPLOTnew`); the wrapper retrieved the auxiliary
+  script data, executed `graveplot.sh -batch`, and `sine.png` appeared in the
+  step directory and the Job Status file viewer. The declared-output check
+  was also exercised: with Plot Output Files still at the default `plot.png`,
+  the step correctly failed with "The file 'plot.png' does not exist".
+
+## Setup note
+
+The generated `graveplot` application definition defaults to
+`/opt/graveplot/bin/graveplot.sh`. On hosts where GRAVEPlot lives elsewhere,
+set the Local location in the Configuration Tool (persisted in
+`~/.snap/5.0/site_config.xml`; stop the calculation server before editing the
+file directly). The generator never overwrites a configured location.
 
 ## Not yet covered
 
-- End-to-end stream execution on a calculation server (requires GRAVEPlot
-  installed on the host; see Distribution in `docs/DESIGN.md`).
+- Execution on RESGC hosts (requires GRAVEPlot installed on the images; see
+  Distribution in `docs/DESIGN.md`).
 - Windows `graveplot.bat` launcher (part of the GRAVEPlot distribution task).
