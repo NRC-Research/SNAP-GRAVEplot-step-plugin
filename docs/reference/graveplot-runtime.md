@@ -1,9 +1,17 @@
 # Reference: GRAVEPlot runtime — install layout, launcher, batch API
 
-GRAVEPlot is the in-house Java plotting application (source:
-github.com/NRC-Research/grave-plot, local clone `~/grave-plot`; Maven,
-JavaFX 22, GraalPy scripting, Playwright PNG rendering). Verified working
-install on this Mac: `~/GRAVEPLOTnew`. Release zip: `~/graveplotLatest.zip`.
+GRAVEPlot is the NRC-owned Java plotting application (Maven, JavaFX 22,
+GraalPy scripting, Playwright PNG rendering). Verified working install on
+this Mac: `~/GRAVEPLOTnew`. Release zip: `~/graveplotLatest.zip`.
+
+**Source provenance (established 2026-08-27)**: the deployed **1.0.0** was
+built by ISL (installer downloaded from customerportal.islinc.com
+2026-05-26; classes built 2026-02-24, Java 21, Spring Boot 3.5.7) from the
+NRC-owned codebase. github.com/NRC-Research/grave-plot (local clone
+`~/grave-plot`) holds only the **0.0.1 prototype** (newest commit July
+2025, Java 17) — the 1.0.0 source, including the whole
+`com.plot.grave.batch` package, exists in no NRC-held repo and is pending
+delivery from ISL (see `docs/isl-graveplot-batch-timeout-bug.md`).
 
 ## Install layout
 
