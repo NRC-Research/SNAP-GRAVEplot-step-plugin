@@ -84,16 +84,33 @@ path; Windows a `graveplot.bat` analogue (does not exist yet — the Windows
 launcher is part of the distribution task). Keep the location overridable in
 the Job Status tool so a pinned/newer GRAVEPlot can be selected per host.
 
-## Distribution (sibling task, required for the step to run anywhere)
+## Distribution (as surveyed 2026-08-27)
 
-- GRAVEPlot itself must be installed on every calc-server host: RESGC RHEL
-  images (`/opt/graveplot`) and Windows images (`C:\Program Files\graveplot`),
-  via the packer roles + the same manifest/sha256 provenance discipline as the
-  SNAP payloads (see `~/RESGC-packer`, `~/SNAP-distribution`).
-- The plugin jar rides the existing SNAP overlay convention:
-  `overlay/plugins/graveplot-step.jar` in the SNAP-Distribution release zip.
-- Playwright browser staging is the fragile part of a headless install; bake
-  it into the image build, never first-run download (no egress on RESGC).
+- **GRAVEPlot on the images is already handled** by the `install_grave` roles
+  in `~/RESGC-packer`, wired into both provision playbooks:
+  - RHEL9: pulls `s3://resgc-packer-artifacts-east/Software/graveplotLatest.zip`
+    and runs the ISL installer headlessly into **`/opt/grave`** (recursive
+    0755 covers the Playwright exec-bit trap; fapolicyd trust included).
+  - Windows: pulls `Software/graveWindowsLatest.zip`, a pre-baked archive of a
+    known-good install, extracted to **`C:\GRAVE`** — including a working,
+    relocatable `bin/graveplot.bat` (the ISL installer hangs on a native COM
+    call under SYSTEM/WinRM, hence the pre-baked approach). The Windows
+    launcher task from earlier drafts of this doc is therefore already done.
+- The app generator's default Local locations match those paths
+  (`/opt/grave/bin/graveplot.sh`, `C:\GRAVE\bin\graveplot.bat`).
+- **The plugin jar rides the SNAP overlay convention**:
+  `overlay/plugins/graveplot-step.jar` in the next SNAP-Distribution release
+  zip. The overlay applier in every install door copies `overlay/` files
+  install-relative, so no packer change is needed for the jar itself. The
+  release procedure lives in `~/RESGC-Admin-Notes/SNAP/release-process.md`
+  (build on the previous release zip, never a staging area).
+- Per-user application definitions on existing analyst homes come from the
+  app generator at calc-server start — the site-config merge script never
+  adds applications, so the generator defaults are the load-bearing path.
+- Playwright browser staging is the fragile part of a headless install; it is
+  baked into the artifacts (no first-run download — no egress on RESGC). A
+  build-time headless render smoke test in the install_grave roles is the
+  remaining hardening opportunity.
 
 ## Open decisions (resolved in v0.1.0 — see "As built" below)
 
@@ -151,6 +168,6 @@ model and is what the implementation mirrors:
   `StreamModuleLoader.StreamStepTable.isAllowedPlugin` treats null/empty as
   "allowed everywhere".
 - **App generator**: registers `graveplot` with a default Local location of
-  `/opt/graveplot/bin/graveplot.sh` (Windows:
-  `C:\Program Files\graveplot\bin\graveplot.bat`); it never overwrites an
-  existing user-configured location.
+  `/opt/grave/bin/graveplot.sh` (Windows: `C:\GRAVE\bin\graveplot.bat`) —
+  the RESGC image install paths; it never overwrites an existing
+  user-configured location.

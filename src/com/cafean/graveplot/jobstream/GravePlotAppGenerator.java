@@ -35,10 +35,13 @@ public class GravePlotAppGenerator extends ApplicationGenerator {
         }
     }
 
+    // The RESGC image install locations (RESGC-packer install_grave roles):
+    // RHEL images run the ISL installer into /opt/grave; Windows images
+    // extract a pre-baked archive to C:\GRAVE.
     private static String getDefaultLocation() {
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            return "C:\\Program Files\\graveplot\\bin\\graveplot.bat";
+            return "C:\\GRAVE\\bin\\graveplot.bat";
         }
-        return "/opt/graveplot/bin/graveplot.sh";
+        return "/opt/grave/bin/graveplot.sh";
     }
 }

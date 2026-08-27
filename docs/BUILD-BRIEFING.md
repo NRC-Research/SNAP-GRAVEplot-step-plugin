@@ -41,9 +41,11 @@ classes plus a manifest — that is the entire plugin. See `docs/DESIGN.md`.
   (Maven, Spring Boot PropertiesLauncher, JavaFX 22, GraalPy, Playwright).
 - Working GRAVEPlot install (macOS): `~/GRAVEPLOTnew` (`bin/graveplot.sh`).
   Release zip artifact: `~/graveplotLatest.zip`.
-- GRAVEPlot is **not yet installed on any RESGC image** (RHEL VMs or Windows).
-  The step plugin is useless on a calc-server host without it — distribution
-  is a sibling task (see "Distribution" in `docs/DESIGN.md`).
+- GRAVEPlot ships to RESGC images via the `install_grave` packer roles
+  (`~/RESGC-packer`): RHEL runs the ISL installer headlessly into
+  **`/opt/grave`**; Windows extracts a pre-baked archive to **`C:\GRAVE`**
+  (with a working `bin/graveplot.bat`). The app generator defaults match
+  those paths. See "Distribution" in `docs/DESIGN.md`.
 - SNAP plugin dev references on this machine: `~/SNAP-TraceForce-plugin`
   (build.xml compiles against a SNAP install's jars), `~/SNAP-TRACE-Plugin`
   (the big TRACE plugin repo), deployed SNAP at `/opt/snap` on

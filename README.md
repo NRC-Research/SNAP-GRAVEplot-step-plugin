@@ -39,9 +39,9 @@ Produces `graveplot-step.jar` and the install-relative overlay zip
 Copy `graveplot-step.jar` into the SNAP install's `plugins/` folder and
 restart the Model Editor and calculation server. The `graveplot` application
 definition is generated automatically on calc-server start with a default
-Local location of `/opt/graveplot/bin/graveplot.sh`
-(`C:\Program Files\graveplot\bin\graveplot.bat` on Windows); point it at the
-actual GRAVEPlot install in the Configuration Tool if it lives elsewhere.
+Local location of `/opt/grave/bin/graveplot.sh` (`C:\GRAVE\bin\graveplot.bat`
+on Windows) — the RESGC image install paths; point it at the actual GRAVEPlot
+install in the Configuration Tool if it lives elsewhere.
 
 ## Using the step
 

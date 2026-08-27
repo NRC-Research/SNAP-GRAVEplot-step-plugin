@@ -89,7 +89,10 @@ read `graveplot_api.py` for the full facade.
 
 ## Deployment status (2026-08-27)
 
-Installed nowhere but this Mac. Before the job step is usable on RESGC, the
-calc-server hosts need GRAVEPlot baked into the images (RHEL `/opt/graveplot`,
-Windows `C:\Program Files\graveplot`) with the same manifest/sha256 provenance
-discipline as the SNAP payloads (`~/RESGC-packer`, `~/SNAP-distribution`).
+The RESGC packer roles (`~/RESGC-packer`, `install_grave` in both provision
+playbooks) bake GRAVEPlot into the images: RHEL9 runs the ISL installer
+headlessly into `/opt/grave` from `graveplotLatest.zip` in the packer S3
+bucket; Windows extracts a pre-baked `graveWindowsLatest.zip` (a zipped
+known-good install with a relocatable `bin\graveplot.bat`) to `C:\GRAVE`.
+Verified working on this Mac at `~/GRAVEPLOTnew`. Artifact provenance follows
+the same S3-bucket discipline as the SNAP payloads (`~/SNAP-distribution`).
