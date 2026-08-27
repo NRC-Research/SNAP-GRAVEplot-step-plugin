@@ -51,8 +51,13 @@ graveplot.sh -batch <script>.py
   `PlotScriptingApi` host object (global `api`) in Python builders.
 - **`__file__` is NOT defined** in batch scripts. Use `os.getcwd()`; run the
   batch with cwd = the directory holding the data files.
-- Rendering goes through Playwright headless Chromium →
-  `plot.render(path, width, height)` writes a PNG.
+- `plot.render(path, width, height)` dispatches on the output extension:
+  `.png` (and other bitmap types) go through Playwright headless Chromium
+  screenshots; **`.svg` produces true vector output** via the chart's native
+  `window.exportSVG()` (validated/normalized in `ScreenshotService`, which
+  also carries a write-HTML fallback when no screenshot engine is available).
+  Verified 2026-08-27: a 10-series x 1376-point batch render to `.svg`
+  emitted genuine path geometry, no embedded bitmap.
 - Interpreter noise on stderr is normal (JVMCI "interpreter only" warning,
   Truffle log redirect hints); exit code is the success signal.
 
