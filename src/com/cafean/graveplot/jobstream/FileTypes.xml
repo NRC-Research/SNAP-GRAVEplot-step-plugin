@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<filetypes>
+    <filetype name="TH" source="Generic" type="ASCII">
+        <category>text</category>
+        <description>Time History dataset file.</description>
+    </filetype>
+</filetypes>

@@ -1,0 +1,36 @@
+<project name="GravePlotStep" default="distribution" basedir=".">
+    <property name="snap" value="${user.home}/run-snap500"/>
+    <property name="builddir" value="build"/>
+    <property name="version" value="0.1.0"/>
+
+    <path id="snap.classpath">
+        <pathelement location="${builddir}"/>
+        <fileset dir="${snap}/lib" includes="*.jar"/>
+        <fileset dir="${snap}/plugins" includes="*.jar"/>
+    </path>
+
+    <target name="compile">
+        <mkdir dir="${builddir}"/>
+        <copy todir="${builddir}">
+            <fileset dir="src" includes="**/*.xml,**/*.png"/>
+        </copy>
+        <javac destdir="${builddir}" optimize="no" debug="yes" includeantruntime="false" release="11">
+            <src path="src"/>
+            <classpath refid="snap.classpath"/>
+        </javac>
+    </target>
+
+    <target name="distribution" depends="compile">
+        <jar compress="yes" jarfile="graveplot-step.jar" manifest="META-INF/MANIFEST.MF">
+            <fileset dir="${builddir}"/>
+        </jar>
+        <mkdir dir="${builddir}/zip_stage/plugins"/>
+        <copy file="graveplot-step.jar" todir="${builddir}/zip_stage/plugins"/>
+        <zip destfile="${builddir}/graveplot-step-plugin-v${version}.zip" basedir="${builddir}/zip_stage"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${builddir}"/>
+        <delete file="graveplot-step.jar" quiet="true"/>
+    </target>
+</project>

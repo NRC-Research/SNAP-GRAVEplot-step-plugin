@@ -95,16 +95,62 @@ the Job Status tool so a pinned/newer GRAVEPlot can be selected per host.
 - Playwright browser staging is the fragile part of a headless install; bake
   it into the image build, never first-run download (no egress on RESGC).
 
-## Open decisions
+## Open decisions (resolved in v0.1.0 — see "As built" below)
 
 1. `JSStep` directly (TraceForce style, simple) vs `AbstractPlotStep`
    (AptPlot style, drags in `com.cafean.aptplot.components.*` and
-   plot-definition machinery we do not need). **Recommendation: `JSStep`.**
+   plot-definition machinery we do not need). **Resolved: `JSStep`.**
 2. v0 scope: internal script + N inputs + N outputs, no GUI plot builder.
    A later version could generate script boilerplate from the parent step's
-   known outputs (AppGenerator-style templating).
+   known outputs (AppGenerator-style templating). **Resolved: v0 as scoped.**
 3. Whether the step should also expose GRAVEPlot's report/HTML outputs as
-   declared artifacts (GRAVEPlot can emit more than PNG).
-4. Naming: user's folder name is SNAP-GRAVEplot-step-plugin; class/app naming
-   above uses GravePlot/graveplot — settle capitalization before first commit
-   of code (block-type and appType strings are permanent).
+   declared artifacts. **Deferred: the Plot Output Files list maps extensions
+   to Image:PNG/JPG/SVG/PDF types; other artifact types can be added later.**
+4. Naming. **Resolved (permanent): appType `GravePlot`, application name
+   `graveplot`, block type `GravePlotStep`.**
+
+## As built (v0.1.0 implementation notes)
+
+Mechanisms confirmed by decompiling SNAP 5.0.0 (`job_stream.jar`,
+`js_python.jar`, `js_aptplot.jar`) — the Python Script step
+(`com.cafean.jobstream.python.PythonScriptStep`) turned out to be the closest
+model and is what the implementation mirrors:
+
+- **Script persistence**: `GravePlotProperties extends JSStepData` (script
+  text + plot output names). `JSStep.writeBlock`/`readBlock` automatically
+  embed `getAuxiliaryData()` in the step's `.med` block via
+  `writeBlock(DataOutputStream)`/`readBlock(DataInputStream)` — no DDT/PibFile
+  machinery required. `Xdr.writeBytes/readBytes` carry the script text
+  (`Xdr.readString` strips trailing newlines).
+- **Script transport to the server**: at submit, `ExportUtility` writes
+  `getAuxiliaryData().write(OutputStream)` to the stream stage as
+  `.res/Steps/Step_<n>.dat` for any step with auxiliary data. The wrapper
+  fetches it with the inherited `retrieveAuxiliaryData(File)`, parses the
+  small XML (`<graveplot><script>…`), and writes `<task>.py` (LF, UTF-8) into
+  the step directory.
+- **Execution**: the inherited `WrapperModule.executeApplication(String[],
+  File)` already runs with cwd = the step working directory (the `__file__`
+  gotcha's requirement) and merged output to the screen file. Command:
+  `<launcher> [app args] -batch <task>.py`. Non-zero exit or a missing
+  declared plot output fails the step via the `sendFinalNotifications`
+  override.
+- **Internal vs external script**: an optional `script` input slot
+  (`Python:Script`, a built-in file type). `updateStep` publishes
+  `SCRIPT_INCLUDED` as a module option (the Python step's pattern); the
+  wrapper uses the connected file when present, the shipped aux script
+  otherwise.
+- **Inputs**: one optional input *set* labeled `data` accepting
+  `Generic:Ascii` and `Generic:TH` (TH is declared in this plugin's
+  FileTypes.xml so the step works without the TraceForce plugin present).
+- **Outputs**: `screen` plus one declared output per entry in the
+  comma-separated Plot Output Files property; extensions map to the built-in
+  `Image:PNG/JPG/SVG/PDF` file types. `buildFileNames()` regenerates the
+  output descriptors, preserving per-label settings (the Python step's
+  rebuild pattern).
+- **Unrestricted plugins**: `getAllowedPlugins()` returns an empty array —
+  `StreamModuleLoader.StreamStepTable.isAllowedPlugin` treats null/empty as
+  "allowed everywhere".
+- **App generator**: registers `graveplot` with a default Local location of
+  `/opt/graveplot/bin/graveplot.sh` (Windows:
+  `C:\Program Files\graveplot\bin\graveplot.bat`); it never overwrites an
+  existing user-configured location.
