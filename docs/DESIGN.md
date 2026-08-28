@@ -112,6 +112,30 @@ the Job Status tool so a pinned/newer GRAVEPlot can be selected per host.
   build-time headless render smoke test in the install_grave roles is the
   remaining hardening opportunity.
 
+### Shipped 2026-08-28: GRAVEPlot 1.0.1-nrc1 interim patch
+
+The ISL 1.0.0/1.0.1 builds fail every batch run over 30 seconds (see
+`docs/isl-graveplot-batch-timeout-bug.md`), which fails every GRAVEPlot job
+step on RESGC-class hosts. Pending ISL's fix, NRC ships an interim patch:
+
+- **Patch source**: grave-plot repo, branch `nrc-1.0.1-nrc1` (diff against
+  the `recovered-1.0.0-decompiled` snapshot branch is exactly the patch);
+  timeout default 24 h, `GRAVEPLOT_BATCH_TIMEOUT_SECONDS` override; jar
+  manifest marked `Implementation-Version: 1.0.1-nrc1`.
+- **RHEL images**: the RESGC-packer `install_grave` role (branch
+  `feat/graveplot-step-appdef`) applies the patch after the ISL installer —
+  timeout classes rebuilt from recovered source plus ISL's own 1.0.1 acbind
+  bytecode over the 1.0.0 appfile — then normalizes the ms-playwright
+  browser nesting and runs a headless render smoke test that fails the
+  image build on regressions. Validated on RAVLYMPCGG0001.
+- **Windows images**: `graveWindowsLatest.zip` in the packer bucket carries
+  the same jar patch applied at artifact level (the role is a plain unzip;
+  the pre-patch artifact is preserved as `graveWindowsLatest-pre-nrc1.zip`).
+- **Removal criteria**: when ISL ships a build whose batch runner waits for
+  script completion, drop the role patch step and restore the Windows
+  artifact from a fresh ISL install; confirm with the 35-second sleep
+  bracket first.
+
 ## Open decisions (resolved in v0.1.0 — see "As built" below)
 
 1. `JSStep` directly (TraceForce style, simple) vs `AbstractPlotStep`
