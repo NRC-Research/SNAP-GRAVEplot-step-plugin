@@ -1,10 +1,13 @@
-# GRAVEPlot 1.0.0 defect report: batch mode fails for any script over 30 seconds
+# GRAVEPlot 1.0.0/1.0.1 defect report: batch mode fails for any script over 30 seconds
 
-**Product**: GRAVEPlot 1.0.0 — NRC-owned codebase, built and distributed by
-ISL (GraveplotInstaller.jar from the ISL customer portal, downloaded
-2026-05-26; embedded build date 2026-02-24). The `com.plot.grave.batch`
-package in this build is not present in any NRC-held source; the current
-source snapshot should be delivered to NRC alongside the fix.
+**Product**: GRAVEPlot — NRC-owned codebase, built and distributed by ISL.
+Defect confirmed in **both** builds available from the ISL customer portal:
+1.0.0 (downloaded 2026-05-26, classes dated 2026-02-24) and **1.0.1**
+(downloaded 2026-08-27 via the portal installer, classes dated 2026-07-28 —
+served behind the portal page still labeled "Revision 1.0"). The
+`com.plot.grave.batch` package in these builds is not present in any
+NRC-held source; the current source snapshot should be delivered to NRC
+alongside the fix.
 **Severity**: blocks all unattended/batch use on typical server hardware
 **Reported by**: NRC (RESGC infrastructure integration)
 
@@ -34,7 +37,10 @@ $ graveplot.sh -batch sleep35.py ; echo $?
 
 A 25-second variant of the same script exits 0 and prints its output,
 bracketing the boundary at the 30-second mark. Verified 2026-08-27 on
-macOS (Apple Silicon) and RHEL 9.8 (x86_64).
+macOS (Apple Silicon) and RHEL 9.8 (x86_64) against 1.0.0, and on macOS
+against a fresh 1.0.1 install; the decompiled 1.0.1
+`BatchModeRunner.executeScriptRemotely` carries the identical hard-coded
+30-second request timeout.
 
 ## Real-world impact
 
