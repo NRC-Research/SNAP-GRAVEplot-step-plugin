@@ -69,9 +69,13 @@ public class GravePlotStep extends JSStep {
         // text is exported instead (see updateStep / the wrapper).
         addInput("Python", "Script", "script", "GravePlot.py", false);
         // Data files pulled from connected parent steps into the step directory.
+        // GRAVEPlot reads text data (TH, CSV, generic ASCII) and, since its
+        // 1.0.x analysis-code bindings, TRACE XTV plot files directly. Extend
+        // this list as further code plot types are verified against GRAVEPlot.
         FileTypeRef[] dataTypes = new FileTypeRef[] {
             new FileTypeRef("Generic", "Ascii"),
             new FileTypeRef("Generic", "TH"),
+            new FileTypeRef("TRACE", "XTV"),
         };
         addInputSet(dataTypes, "data", null, false);
         addOutput("Generic", "Ascii", "screen", "GravePlot.screen");

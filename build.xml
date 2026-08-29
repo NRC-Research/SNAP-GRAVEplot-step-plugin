@@ -1,7 +1,7 @@
 <project name="GravePlotStep" default="distribution" basedir=".">
     <property name="snap" value="${user.home}/run-snap500"/>
     <property name="builddir" value="build"/>
-    <property name="version" value="0.1.1"/>
+    <property name="version" value="0.1.2"/>
 
     <path id="snap.classpath">
         <pathelement location="${builddir}"/>
