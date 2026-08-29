@@ -104,6 +104,7 @@ public class GravePlotStep extends JSStep {
     @Override
     public void buildFileNames() {
         buildFileNames(-1);
+        buildDataFileNames();
         // Regenerate the plot outputs from the declared output file names,
         // preserving the settings of outputs whose label is unchanged.
         HashMap<String, OutputDescrip> outputMap = new HashMap<>();
@@ -153,7 +154,34 @@ public class GravePlotStep extends JSStep {
     public void updateStep(CompoundEdit edit) {
         ArrayList<StreamConnection> scriptInputs = findInput("script");
         setBoolValue("SCRIPT_INCLUDED", scriptInputs == null || scriptInputs.isEmpty());
+        buildDataFileNames();
         super.updateStep(edit);
+    }
+
+    // The data input is a set, and the Model Editor derives its expected
+    // runtime files from the set-file-name list — an empty list reads as
+    // "0 Sources Expected" and fails validation as soon as anything is
+    // connected. Stage names are data01, data02, ... in connection order;
+    // batch scripts open them by those names (GRAVEPlot's file importers
+    // take the file type explicitly, so the missing extension is fine).
+    private void buildDataFileNames() {
+        InputDescrip data = findInputDesc("data");
+        if (data == null) {
+            return;
+        }
+        int count = 0;
+        ArrayList<StreamConnection> cons = findInput("data");
+        if (cons != null) {
+            for (StreamConnection con : cons) {
+                count += estimateInputSize(con);
+            }
+        }
+        String[] names = new String[count];
+        int digits = Math.max(2, Integer.toString(count).length());
+        for (int i = 0; i < count; i++) {
+            names[i] = String.format("data%0" + digits + "d", i + 1);
+        }
+        data.setSetFileNames(names);
     }
 
     public String getScript() {
