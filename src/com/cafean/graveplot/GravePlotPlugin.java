@@ -20,9 +20,23 @@ public class GravePlotPlugin extends MEFeaturePlugin {
         return "GRAVEPlot batch plotting integration for the SNAP Job Stream system.";
     }
 
+    /**
+     * Never associated, because this plug-in keeps nothing in a model:
+     * {@link #load} and {@link #save} are empty, and its state lives in job
+     * streams. Answering true cost real data. Every save wrote an empty
+     * 16-byte Plugin section for this plug-in, and because feature plug-ins
+     * register alphabetically, "GRAVEPlot" landed before "MDOCS" - in front
+     * of the section holding the analyst's notes. CAFEAN's MED loader
+     * dispatches only the first Plugin section it meets (MEDUtil.loadModel
+     * stops scanning at one; componentReadComplete loads only what was
+     * recorded), so from the first resave onward the notes no longer loaded,
+     * and on the save after that MDocsPlugin.isAssociated saw no documents
+     * and the notes were dropped from the file entirely. A plug-in with
+     * nothing to persist must not claim the model.
+     */
     @Override
     public boolean isAssociated(AbstractModel model) {
-        return true;
+        return false;
     }
 
     @Override

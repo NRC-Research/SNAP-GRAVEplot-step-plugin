@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 MEPluginData-Class: com.cafean.graveplot.GravePlotPluginData
-MEPluginData-Version: 0.1.4
+MEPluginData-Version: 0.1.5
 JobStepList: com.cafean.graveplot.jobstream.GravePlotDescList
 FileTypesList: com/cafean/graveplot/jobstream/FileTypes.xml
 ApplicationGenerator: com.cafean.graveplot.jobstream.GravePlotAppGenerator
