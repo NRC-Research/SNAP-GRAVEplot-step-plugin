@@ -1,3 +1,10 @@
+//*************************************************************************
+// A work of the US Nuclear Regulatory Commission. Prepared by NRC staff
+// as part of official duties; not subject to copyright protection in the
+// United States under 17 U.S.C. 105.
+//*************************************************************************
+//
+
 package com.cafean.graveplot.jobstream;
 
 import com.apt.xdr.Xdr;
