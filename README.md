@@ -1,5 +1,13 @@
 # SNAP-GRAVEplot-step-plugin
 
+> **Archived (2026-11-25) — superseded.** Starting with the NRC SNAP
+> distribution 5.0.1-r1, SNAP ships ISL's own GRAVEPlot job-stream step
+> (`plugins/js_graveplot.jar`, steps **GRAVEPlot** and **GRAVEPlot-Batch**,
+> requiring GRAVEPlot 1.5.0 or later). This NRC step (0.1.5,
+> `plugins/graveplot-step.jar`) is no longer distributed. Job streams built
+> with it must recreate their step with ISL's step. The code and notes below
+> are kept for reference only.
+
 A SNAP Model Editor plug-in that registers a **GRAVEPlot** job-stream step, so a
 stream can render plots from step outputs (TRACE XTV extracts, TraceForce
 `forces.th` time histories, CSV tables) using GRAVEPlot's headless Python batch
