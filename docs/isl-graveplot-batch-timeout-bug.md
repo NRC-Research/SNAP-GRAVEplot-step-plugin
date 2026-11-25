@@ -1,5 +1,7 @@
 # GRAVEPlot 1.0.0/1.0.1 defect report: batch mode fails for any script over 30 seconds
 
+> **Status (2026-11-24): fixed by ISL in GRAVEPlot 1.5.0.** `BatchModeRunner.executeScriptRemotely` no longer sets a request timeout; a 69 s cold render on RHEL 9 exits 0. NRC's 1.0.1-nrc1 patch is retired. Open 1.5.0 issues are tracked in a separate NRC report to ISL (November 2026).
+
 **Product**: GRAVEPlot — NRC-owned codebase, built and distributed by ISL.
 Defect confirmed in **both** builds available from the ISL customer portal:
 1.0.0 (downloaded 2026-05-26, classes dated 2026-02-24) and **1.0.1**
